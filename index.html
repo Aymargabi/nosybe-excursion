@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nosy Be Excursions - Hell Ville</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     NAVBAR
+═══════════════════════════════════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <!-- ★ Logo cliquable → accueil -->
+    <a href="#" class="logo" onclick="showPage('home')" title="Accueil">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+      </svg>
+      <span>Nosy Be<span class="text-accent">Excursions</span></span>
+    </a>
+
+    <div class="nav-links" id="navLinks">
+      <a href="#" onclick="showPage('home')"       class="nav-link active" data-page="home"       data-nav="home">Accueil</a>
+      <a href="#" onclick="showPage('excursions')" class="nav-link"        data-page="excursions" data-nav="exc">Excursions</a>
+      <a href="#" onclick="showPage('map')"        class="nav-link"        data-page="map"        data-nav="map">Carte</a>
+    </div>
+
+    <div class="nav-actions">
+      <button class="lang-toggle" onclick="toggleLanguage()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+        <span id="langText">FR</span>
+      </button>
+      <button class="btn btn-primary" onclick="showPage('excursions')">Réserver</button>
+    </div>
+
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 12h18M3 6h18M3 18h18"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- Menu Mobile -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#" onclick="showPage('home');toggleMobileMenu()"       class="mobile-link" data-nav="home">Accueil</a>
+  <a href="#" onclick="showPage('excursions');toggleMobileMenu()" class="mobile-link" data-nav="exc">Excursions</a>
+  <a href="#" onclick="showPage('map');toggleMobileMenu()"        class="mobile-link" data-nav="map">Carte</a>
+  <button class="lang-toggle mobile" onclick="toggleLanguage();toggleMobileMenu()">
+    Langue : <span id="langTextMobile">English</span>
+  </button>
+</div>
+
+<!-- ═══════════════════════════════════
+     PAGE ACCUEIL
+═══════════════════════════════════ -->
+<main id="homePage" class="page active">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <h1 id="heroTitle">Découvrez <span class="text-gradient">Nosy Be</span></h1>
+      <p class="hero-subtitle" id="heroSub">L'île aux parfums vous ouvre ses portes</p>
+      <p class="hero-desc" id="heroDesc">Des expériences uniques à Nosy Be avec nos excursions terrestres et marines. Réservation simple, confirmation instantanée.</p>
+      <button class="btn btn-primary btn-lg" onclick="showPage('excursions')">
+        <span id="heroBtn">Découvrir les excursions</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+    <div class="hero-wave">
+      <svg viewBox="0 0 1440 120" fill="none"><path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/></svg>
+    </div>
+  </section>
+
+  <!-- Pourquoi nous -->
+  <section class="features">
+    <div class="container">
+      <h2 class="section-title" id="whyUsTitle">Pourquoi nous choisir ?</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon bg-sky">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          </div>
+          <h3>Expertise locale</h3>
+          <p>10 ans d'expérience sur Nosy Be</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon bg-emerald">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+          </div>
+          <h3>Paiement sécurisé</h3>
+          <p>MVola, Airtel Money ou espèces</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon bg-amber">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+          </div>
+          <h3>Confirmation instantanée</h3>
+          <p>Réservation immédiate garantie</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon bg-purple">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.01.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.59l2.2-2.21c.28-.26.36-.65.25-1C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"/></svg>
+          </div>
+          <h3>Support 7j/7</h3>
+          <p>+261 32 795 0641</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Excursions populaires -->
+  <section class="featured">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title" id="popularTitle">Excursions populaires</h2>
+        <button class="btn btn-outline" onclick="showPage('excursions')">
+          <span id="seeAllBtn">Voir toutes</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+      <div class="excursions-grid" id="featuredGrid"></div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="container">
+      <h2 id="ctaTitle">Prêt à découvrir Nosy Be ?</h2>
+      <p id="ctaDesc">Réservez votre prochaine aventure et créez des souvenirs inoubliables</p>
+      <button class="btn btn-secondary btn-lg" onclick="showPage('excursions')">Découvrir les excursions</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════════
+     PAGE EXCURSIONS
+═══════════════════════════════════ -->
+<main id="excursionsPage" class="page">
+  <section class="page-header">
+    <div class="container">
+      <h1>Nos excursions</h1>
+      <p>Découvrez nos excursions terrestres et marines à Nosy Be</p>
+    </div>
+  </section>
+  <section class="excursions-content">
+    <div class="container">
+      <div class="filters">
+        <div class="filter-group">
+          <label>Catégorie</label>
+          <select id="categoryFilter" onchange="filterExcursions()">
+            <option value="all">Toutes</option>
+            <option value="sea">Mer</option>
+            <option value="land">Terre</option>
+            <option value="adventure">Aventure</option>
+            <option value="cultural">Culturel</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Durée</label>
+          <select id="durationFilter" onchange="filterExcursions()">
+            <option value="all">Toutes</option>
+            <option value="half_day">Demi-journée</option>
+            <option value="full_day">Journée complète</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Difficulté</label>
+          <select id="difficultyFilter" onchange="filterExcursions()">
+            <option value="all">Toutes</option>
+            <option value="easy">Facile</option>
+            <option value="moderate">Modérée</option>
+            <option value="challenging">Difficile</option>
+          </select>
+        </div>
+        <button class="btn btn-outline" onclick="clearFilters()">Effacer</button>
+      </div>
+      <div class="excursions-grid" id="excursionsGrid"></div>
+    </div>
+  </section>
+</main>
+
+<!-- ═══════════════════════════════════
+     PAGE DÉTAIL EXCURSION
+═══════════════════════════════════ -->
+<main id="detailPage" class="page">
+  <div class="detail-hero" id="detailHero"></div>
+  <section class="detail-content">
+    <div class="container">
+      <div class="detail-grid">
+
+        <!-- Contenu principal -->
+        <div class="detail-main">
+          <div class="detail-header">
+            <span class="badge" id="detailCategory"></span>
+            <h1 id="detailTitle"></h1>
+            <div class="detail-meta">
+              <span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                <span id="detailDuration"></span>
+              </span>
+              <span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span id="detailDeparture"></span>
+              </span>
+              <span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                <span id="detailMaxParticipants"></span>
+              </span>
+            </div>
+          </div>
+          <div class="detail-section"><p id="detailDescription"></p></div>
+          <div class="detail-section">
+            <h2>Points forts</h2>
+            <ul class="highlights-list" id="detailHighlights"></ul>
+          </div>
+          <div class="detail-section">
+            <h2>Inclus</h2>
+            <ul class="included-list" id="detailIncluded"></ul>
+          </div>
+          <div class="detail-section">
+            <h2>Itinéraire</h2>
+            <div class="itinerary" id="detailItinerary"></div>
+          </div>
+          <div class="detail-section">
+            <h2>Galerie photos</h2>
+            <div class="gallery" id="detailGallery"></div>
+          </div>
+        </div>
+
+        <!-- Sidebar réservation -->
+        <div class="detail-sidebar">
+          <div class="booking-card">
+            <div class="price-display">
+              <span class="price-label">Prix</span>
+              <span class="price-value" id="detailPrice"></span>
+              <span class="price-unit">/ personne</span>
+            </div>
+            <div class="booking-form">
+              <div class="form-group">
+                <label>Sélectionnez une date</label>
+                <input type="date" id="bookingDate" onchange="updateAvailability()">
+              </div>
+              <div class="availability-info" id="availabilityInfo" style="display:none">
+                <span class="available-count"></span>
+              </div>
+              <div class="form-group">
+                <label>Participants</label>
+                <div class="participants-selector">
+                  <button onclick="changeParticipants(-1)">−</button>
+                  <span id="participantCount">1</span>
+                  <button onclick="changeParticipants(1)">+</button>
+                </div>
+              </div>
+              <div class="total-display">
+                <span>Total</span>
+                <span class="total-value" id="totalPrice">0 Ar</span>
+              </div>
+              <button class="btn btn-primary btn-lg" onclick="showBookingForm()">
+                Réserver cette excursion
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ═══════════════════════════════════
+     PAGE FORMULAIRE DE RÉSERVATION
+═══════════════════════════════════ -->
+<main id="bookingPage" class="page">
+  <div class="container">
+    <div class="booking-grid">
+
+      <!-- Formulaire -->
+      <div class="booking-form-section">
+        <h1>Finaliser votre réservation</h1>
+        <form id="finalBookingForm" onsubmit="submitBooking(event)">
+          <div class="form-group">
+            <label>Nom complet *</label>
+            <input type="text" id="bookingName" required placeholder="Jean Dupont">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Email *</label>
+              <input type="email" id="bookingEmail" required placeholder="jean@exemple.com">
+            </div>
+            <div class="form-group">
+              <label>Téléphone / WhatsApp *</label>
+              <input type="tel" id="bookingPhone" required placeholder="+261 32 xx xxx xx">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Demandes spéciales</label>
+            <textarea id="bookingRequests" rows="3" placeholder="Allergies, besoins spécifiques, langue préférée..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Mode de paiement *</label>
+            <div class="payment-options">
+              <label class="payment-option">
+                <input type="radio" name="payment" value="MVola" required>
+                <span class="payment-icon bg-orange">MVola</span>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="payment" value="Airtel Money">
+                <span class="payment-icon bg-red">Airtel Money</span>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="payment" value="Espèces">
+                <span class="payment-icon bg-emerald">Espèces</span>
+              </label>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+            Confirmer la réservation
+          </button>
+        </form>
+      </div>
+
+      <!-- Récapitulatif -->
+      <div class="booking-summary">
+        <div class="summary-card">
+          <img id="summaryImage" src="" alt="" style="display:none;width:100%;height:160px;object-fit:cover;border-radius:.75rem;margin-bottom:1rem">
+          <h3>Récapitulatif</h3>
+          <div class="summary-row"><span>Excursion</span><span id="summaryExcursion"></span></div>
+          <div class="summary-row"><span>Date</span><span id="summaryDate"></span></div>
+          <div class="summary-row"><span>Participants</span><span id="summaryParticipants"></span></div>
+          <div class="summary-row"><span>Prix unitaire</span><span id="summaryUnitPrice"></span></div>
+          <div class="summary-total"><span>Total à payer</span><span id="summaryTotal"></span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════
+     PAGE CONFIRMATION
+═══════════════════════════════════ -->
+<main id="confirmationPage" class="page">
+  <div class="container">
+    <div class="confirmation-card">
+      <div class="success-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <h1>Réservation confirmée !</h1>
+      <p class="subtitle">Merci pour votre confiance</p>
+
+      <div class="reference-box">
+        <span>Référence de réservation</span>
+        <strong id="confirmReference"></strong>
+      </div>
+
+      <div class="confirmation-details">
+        <div class="conf-detail">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <div><span>Excursion</span><strong id="confirmExcursion"></strong></div>
+        </div>
+        <div class="conf-detail">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <div><span>Date</span><strong id="confirmDate"></strong></div>
+        </div>
+        <div class="conf-detail">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          <div><span>Participants</span><strong id="confirmParticipants"></strong></div>
+        </div>
+      </div>
+
+      <div class="confirmation-total">
+        <span>Total</span>
+        <strong id="confirmTotal"></strong>
+      </div>
+
+      <div class="notifications">
+        <div class="notification">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Email de confirmation envoyé à l'organisateur
+        </div>
+        <div class="notification">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          Notre équipe vous contactera sur WhatsApp
+        </div>
+      </div>
+
+      <!-- ★ Boutons contact direct -->
+      <div class="confirm-actions">
+        <a id="confirmWaBtn" href="https://wa.me/261327950641" target="_blank" class="btn-wa">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+          WhatsApp — +261 32 795 0641
+        </a>
+        <a href="tel:+261327950641" class="btn-call">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Appeler — +261 32 795 0641
+        </a>
+      </div>
+
+      <button class="btn btn-primary" onclick="showPage('home')">Retour à l'accueil</button>
+    </div>
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════
+     PAGE CARTE
+═══════════════════════════════════ -->
+<main id="mapPage" class="page">
+  <section class="page-header">
+    <div class="container">
+      <h1 id="mapPageTitle">Points de départ</h1>
+      <p id="mapPageDesc">Localisation des points de départ pour nos excursions</p>
+    </div>
+  </section>
+  <section class="map-content">
+    <div class="container">
+      <div id="map"></div>
+      <div class="departure-list" id="departureList"></div>
+    </div>
+  </section>
+</main>
+
+<!-- ═══════════════════════════════════
+     FOOTER
+═══════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-about">
+        <div class="footer-logo">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          <span>Nosy Be<span class="text-accent">Excursions</span></span>
+        </div>
+        <p>Votre expert local pour découvrir Nosy Be. Nous faisons découvrir les merveilles de l'île aux parfums depuis plus de 10 ans.</p>
+        <div class="social-links">
+          <a href="#" title="Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z"/></svg>
+          </a>
+          <a href="#" title="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h4>Liens rapides</h4>
+        <a href="#" onclick="showPage('home')">Accueil</a>
+        <a href="#" onclick="showPage('excursions')">Excursions</a>
+        <a href="#" onclick="showPage('map')">Carte</a>
+      </div>
+      <div class="footer-contact">
+        <h4>Contact</h4>
+        <p>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Hell Ville, Nosy Be
+        </p>
+        <p>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <a href="tel:+261327950641">+261 32 795 0641</a>
+        </p>
+        <p>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <a href="mailto:aymargabriel05@gmail.com">aymargabriel05@gmail.com</a>
+        </p>
+        <p>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+          <a href="https://wa.me/261327950641" target="_blank">WhatsApp direct</a>
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Nosy Be Excursions. Tous droits réservés.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="site.js"></script>
+</body>
+</html>
